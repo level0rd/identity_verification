@@ -159,10 +159,10 @@ if st.button('Confirm'):
         bbox_doc, shape_doc = get_shape(image_doc)
         bbox_cam, shape_cam = get_shape(cam_image_load.image)
 
-        cam_image = cam_image_load.image
+        image_cam = cam_image_load.image
 
         doc_descriptor = face_recognition.compute_face_descriptor(image_doc, shape_doc)
-        cam_descriptor = face_recognition.compute_face_descriptor(cam_image, shape_cam)
+        cam_descriptor = face_recognition.compute_face_descriptor(image_cam, shape_cam)
 
         doc_descriptor = np.array(list(doc_descriptor))
         cam_descriptor = np.array(list(cam_descriptor))
@@ -177,7 +177,7 @@ if st.button('Confirm'):
             bbox_color = (255, 0, 0)
 
         marked_face_doc = draw_facemask(image_doc, bbox_doc, shape_doc, bbox_color)
-        marked_face_cam = draw_facemask(cam_image, bbox_cam, shape_cam, bbox_color)
+        marked_face_cam = draw_facemask(image_cam, bbox_cam, shape_cam, bbox_color)
 
         h_doc, w_doc = marked_face_doc.shape[:2]
         h_cam, w_cam = marked_face_cam.shape[:2]
