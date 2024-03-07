@@ -1,6 +1,6 @@
 # Identity confirmation by photo with Dlib models.
 
-## Build and run the Application Locally
+## Build and run the application locally
 
 ```python
 streamlit run person_identity.py
