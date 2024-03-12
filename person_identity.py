@@ -35,7 +35,7 @@ class CameraImageLoad:
 camera_image_load = CameraImageLoad()
 
 
-def shape_to_np(shape: dlib.full_object_detection, dtype: str = "int") -> np.ndarray:
+def shape_to_np(shape: dlib.full_object_detection) -> np.ndarray:
     """
     Convert shape to a numpy array.
 
@@ -47,7 +47,7 @@ def shape_to_np(shape: dlib.full_object_detection, dtype: str = "int") -> np.nda
         np.ndarray: Converted numpy array.
     """
 
-    cord = np.zeros((shape.num_parts, 2), dtype=dtype)
+    cord = np.zeros((shape.num_parts, 2), dtype=np.uint16)
     for i in range(0, shape.num_parts):
         cord[i] = (shape.part(i).x, shape.part(i).y)
     return cord
@@ -88,10 +88,10 @@ def get_shape(image: np.ndarray) -> tuple:
         temp_str = ', '.join(numbers)
         bbox = temp_str.split(',')
 
-    return bbox, shape
+    return np.array(bbox, dtype=np.uint16), shape
 
 
-def draw_facemask(face: np.ndarray, bbox: list, shape: dlib.full_object_detection, bbox_color: tuple) -> np.ndarray: 
+def draw_facemask(face: np.ndarray, bbox: np.ndarray, shape: dlib.full_object_detection, bbox_color: tuple) -> np.ndarray: 
     """
     Draw facemask on the face.
 
@@ -198,8 +198,8 @@ if st.button('Confirm'):
         document_descriptor = face_recognition.compute_face_descriptor(image_document, shape_document)
         camera_descriptor = face_recognition.compute_face_descriptor(image_camera, shape_camera)
 
-        document_descriptor = np.array(list(document_descriptor))
-        camera_descriptor = np.array(list(camera_descriptor))
+        document_descriptor = np.array(document_descriptor)
+        camera_descriptor = np.array(camera_descriptor)
 
         a = np.linalg.norm(document_descriptor - camera_descriptor)
 
