@@ -164,6 +164,7 @@ def callback(frame: av.VideoFrame) -> av.VideoFrame:
 
     return av.VideoFrame.from_ndarray(image_rgb, format="rgb24")
 
+
 def main():
     
     streaming_placeholder = st.empty()
@@ -231,6 +232,7 @@ def main():
             right_column.image(marked_face_camera, use_column_width=False)
     
             st.subheader(result)
+
 
 if __name__ == "__main__":
     main()
