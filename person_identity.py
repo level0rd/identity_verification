@@ -23,8 +23,6 @@ shape_predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks_GTX.da
 face_recognition = dlib.face_recognition_model_v1('dlib_face_recognition_resnet_model_v1.dat')
 detector = dlib.get_frontal_face_detector()
 
-streaming_placeholder = st.empty()
-
 
 class CameraImageLoad:
     def __init__(self):
@@ -166,67 +164,74 @@ def callback(frame: av.VideoFrame) -> av.VideoFrame:
 
     return av.VideoFrame.from_ndarray(image_rgb, format="rgb24")
 
+def main():
+    
+    streaming_placeholder = st.empty()
+    
+    with streaming_placeholder.container():
+        webrtc_ctx = webrtc_streamer(
+            key="object-detection",
+            mode=WebRtcMode.SENDRECV,
+            rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]},
+            video_frame_callback=callback,
+            media_stream_constraints={"video": True, "audio": False},
+            async_processing=True,
+        )
+    
+    photo_document = st.file_uploader("Upload the photo from the document")
+    
+    if st.button('Confirm'):
+    
+        camera_image_load.check_button_pressed = True
+    
+        if photo_document is not None:
+            image_array = np.frombuffer(photo_document.read(), dtype=np.uint8)
+            image_document = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
+            image_document = cv2.cvtColor(image_document, cv2.COLOR_BGR2RGB)
+    
+            left_column, right_column = st.columns([1, 1])
+    
+            bbox_document, shape_document = get_shape(image_document)
+            bbox_camera, shape_camera = get_shape(camera_image_load.image)
+    
+            image_camera = camera_image_load.image
+    
+            document_descriptor = face_recognition.compute_face_descriptor(image_document, shape_document)
+            camera_descriptor = face_recognition.compute_face_descriptor(image_camera, shape_camera)
+    
+            document_descriptor = np.array(document_descriptor)
+            camera_descriptor = np.array(camera_descriptor)
+    
+            a = np.linalg.norm(document_descriptor - camera_descriptor)
+    
+            if a < THRESHOLD:
+                result = ':green[Identity has been successfully confirmed!]'
+                bbox_color = GREEN
+            else:
+                result = ':red[Identity has not been confirmed!]'
+                bbox_color = RED
+    
+            marked_face_document = draw_facemask(image_document, bbox_document, shape_document, bbox_color)
+            marked_face_camera = draw_facemask(image_camera, bbox_camera, shape_camera, bbox_color)
+    
+            height_document, width_document = marked_face_document.shape[:2]
+            height_camera, width_camera = marked_face_camera.shape[:2]
+            max_side_document = max(height_document, width_document)
+            max_side_camera = max(height_camera, width_camera)
+    
+            if max_side_camera > max_side_document:
+                scale = max_side_camera / max_side_document
+                marked_face_document = cv2.resize(marked_face_document, None, fx=scale, fy=scale, interpolation=cv2.INTER_LINEAR)
+    
+            else:
+                scale = max_side_document / max_side_camera
+                marked_face_camera = cv2.resize(marked_face_camera, None, fx=scale, fy=scale, interpolation=cv2.INTER_LINEAR)
+    
+            left_column.image(marked_face_document, use_column_width=False)
+            right_column.image(marked_face_camera, use_column_width=False)
+    
+            st.subheader(result)
 
-with streaming_placeholder.container():
-    webrtc_ctx = webrtc_streamer(
-        key="object-detection",
-        mode=WebRtcMode.SENDRECV,
-        rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]},
-        video_frame_callback=callback,
-        media_stream_constraints={"video": True, "audio": False},
-        async_processing=True,
-    )
-
-photo_document = st.file_uploader("Upload the photo from the document")
-
-if st.button('Confirm'):
-
-    camera_image_load.check_button_pressed = True
-
-    if photo_document is not None:
-        image_array = np.frombuffer(photo_document.read(), dtype=np.uint8)
-        image_document = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
-        image_document = cv2.cvtColor(image_document, cv2.COLOR_BGR2RGB)
-
-        left_column, right_column = st.columns([1, 1])
-
-        bbox_document, shape_document = get_shape(image_document)
-        bbox_camera, shape_camera = get_shape(camera_image_load.image)
-
-        image_camera = camera_image_load.image
-
-        document_descriptor = face_recognition.compute_face_descriptor(image_document, shape_document)
-        camera_descriptor = face_recognition.compute_face_descriptor(image_camera, shape_camera)
-
-        document_descriptor = np.array(document_descriptor)
-        camera_descriptor = np.array(camera_descriptor)
-
-        a = np.linalg.norm(document_descriptor - camera_descriptor)
-
-        if a < THRESHOLD:
-            result = ':green[Identity has been successfully confirmed!]'
-            bbox_color = GREEN
-        else:
-            result = ':red[Identity has not been confirmed!]'
-            bbox_color = RED
-
-        marked_face_document = draw_facemask(image_document, bbox_document, shape_document, bbox_color)
-        marked_face_camera = draw_facemask(image_camera, bbox_camera, shape_camera, bbox_color)
-
-        height_document, width_document = marked_face_document.shape[:2]
-        height_camera, width_camera = marked_face_camera.shape[:2]
-        max_side_document = max(height_document, width_document)
-        max_side_camera = max(height_camera, width_camera)
-
-        if max_side_camera > max_side_document:
-            scale = max_side_camera / max_side_document
-            marked_face_document = cv2.resize(marked_face_document, None, fx=scale, fy=scale, interpolation=cv2.INTER_LINEAR)
-
-        else:
-            scale = max_side_document / max_side_camera
-            marked_face_camera = cv2.resize(marked_face_camera, None, fx=scale, fy=scale, interpolation=cv2.INTER_LINEAR)
-
-        left_column.image(marked_face_document, use_column_width=False)
-        right_column.image(marked_face_camera, use_column_width=False)
-
-        st.subheader(result)
+if __name__ == "__main__":
+    main()
+    
