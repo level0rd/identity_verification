@@ -13,7 +13,7 @@ streamlit run person_identity.py
 ## Example
 <p align="center">
   <img width="1000" alt="Arch2" src="https://github.com/level0rd/identity_verification/assets/45522296/3a9e4100-4511-462b-8309-dba736432db2.jpg">
-  <img width="552" alt="Sam" src="https://github.com/level0rd/identity_verification/assets/45522296/ba56b016-cae8-4671-bed4-4f5f5fe36024.png">
+  <img width="1000" alt="Sam" src="https://github.com/level0rd/identity_verification/assets/45522296/0717d27d-8538-47ec-a161-eed39e8350c4.png">
 </p>
 
 ### Successful identity confirmation
