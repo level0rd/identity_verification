@@ -21,4 +21,6 @@ https://github.com/level0rd/identity_verification/assets/45522296/a422b954-6b78-
 
 
 ### Failed identity confirmation
-![Bad_identityV3](https://github.com/level0rd/identity_verification/assets/45522296/9ee9d48b-a4c0-4707-a9f5-005daa56de2e)
+https://github.com/level0rd/identity_verification/assets/45522296/22494672-159d-4495-beb1-d0237739c2ba
+
+
