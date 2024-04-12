@@ -17,7 +17,8 @@ streamlit run person_identity.py
 </p>
 
 ### Successful identity confirmation
-![Successful_identity](https://github.com/level0rd/identity_verification/assets/45522296/99951090-a04c-4989-9a37-d25c38e713e4)
+https://github.com/level0rd/identity_verification/assets/45522296/a422b954-6b78-4b0a-be6f-22b785123c7e
+
 
 ### Failed identity confirmation
 ![Bad_identityV3](https://github.com/level0rd/identity_verification/assets/45522296/9ee9d48b-a4c0-4707-a9f5-005daa56de2e)
