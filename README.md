@@ -2,9 +2,19 @@
 
 ## Build and run the application locally
 
-```python
+```bash
 streamlit run person_identity.py
 ```
+
+## Build and run the application in Docker
+```bash
+# Build Docker image
+docker build . -t streamlit:3.0.0
+# Run Docker container
+docker run -p 8501:8501 streamlit:3.0.0
+```
+If the Docker container is running locally, the application will be available at http://localhost:8501.
+
 ## Architecture
 <p align="center">
   <img width="4096" alt="Arch1_7" src="https://github.com/level0rd/identity_verification/assets/45522296/76275151-28e2-4633-9a58-36b27edb31a0.png">
