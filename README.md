@@ -9,9 +9,9 @@ streamlit run person_identity.py
 ## Build and run the application in Docker
 ```bash
 # Build Docker image
-docker build . -t streamlit:3.0.0
+docker build . -t streamlit
 # Run Docker container
-docker run -p 8501:8501 streamlit:3.0.0
+docker run -p 8501:8501 streamlit
 ```
 If the Docker container is running locally, the application will be available at http://localhost:8501.
 
