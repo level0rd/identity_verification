@@ -1,15 +1,15 @@
 # app/Dockerfile
 
-# Используйте официальный образ Python
+# Use the official Python image
 FROM python:3.9-slim
 
-# Установите переменную окружения для установки кодировки UTF-8
+# Set environment variable for setting UTF-8 encoding
 ENV PYTHONUNBUFFERED=1
 
-# Установите рабочую директорию в /app
+# Set the working directory to /app
 WORKDIR /app
 
-# Установите зависимости, которые могут потребоваться для вашего приложения
+# Install dependencies that may be needed for your application
 RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx \
     build-essential \
@@ -18,14 +18,14 @@ RUN apt-get update && apt-get install -y \
     software-properties-common \
     && rm -rf /var/lib/apt/lists/*
 
-# Скопируйте все файлы вашего приложения в текущую директорию в контейнере
+# Copy all files of your application into the current directory in the container
 COPY . .
 
-# Установите зависимости проекта
+# Install project dependencies
 RUN pip3 install -r requirements.txt
 
-# Установите порт, который будет использоваться вашим приложением Streamlit
+# Set the port that your Streamlit application will use
 EXPOSE 8501
 
-# Запустите ваше приложение Streamlit при запуске контейнера
+# Run your Streamlit application when the container starts
 CMD ["streamlit", "run", "person_identity.py", "--server.port=8501", "--server.address=0.0.0.0"]
